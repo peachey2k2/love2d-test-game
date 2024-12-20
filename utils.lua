@@ -2,8 +2,8 @@ local utils = {}
 
 function utils.inRect(rect, x, y)
     return (
-        rect.x < x and (rect.x + rect.width) > x and
-        rect.y < y and (rect.y + rect.height) > y
+        rect.xx < x and (rect.xx + rect.ww) > x and
+        rect.yy < y and (rect.yy + rect.hh) > y
     )
 end
 
