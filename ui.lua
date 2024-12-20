@@ -9,22 +9,34 @@ ui.TYPE_BUTTON = 1
 
 ui.heldButton = nil
 
-
-ui.ButtonNormal = {
-    fgColor = { 0.2, 0.2, 0.2 },
-    bgColor = { 0.1, 0.1, 0.1 },
-    fgHoverColor = { 0.28, 0.28, 0.28 },
-    bgHoverColor = { 0.18, 0.18, 0.18 },
-    textColor = { 1, 1, 1 },
+ui.ButtonThemes = {
+    normal = {
+        fgColor = { 0.2, 0.2, 0.2 },
+        bgColor = { 0.1, 0.1, 0.1 },
+        fgHoverColor = { 0.28, 0.28, 0.28 },
+        bgHoverColor = { 0.18, 0.18, 0.18 },
+        textColor = { 1, 1, 1 },
+    },
+    negative = {
+        fgColor = { 0.6, 0.1, 0.1 },
+        bgColor = { 0.4, 0.05, 0.05 },
+        fgHoverColor = { 0.7, 0.15, 0.15 },
+        bgHoverColor = { 0.5, 0.10, 0.10 },
+        textColor = { 1, 1, 1 },
+    }
 }
 
-ui.ButtonNegative = {
-    fgColor = { 0.6, 0.1, 0.1 },
-    bgColor = { 0.4, 0.05, 0.05 },
-    fgHoverColor = { 0.7, 0.15, 0.15 },
-    bgHoverColor = { 0.5, 0.10, 0.10 },
-    textColor = { 1, 1, 1 },
-}
+ui.Drawn = {}
+
+function ui.draw()
+    for _, scene in ipairs(ui.Drawn) do
+        for _, obj in ipairs(scene) do
+            if (obj.type == ui.TYPE_BUTTON) then
+                ui.drawButton(obj)
+            end
+        end
+    end
+end
 
 function ui.drawButton(button)
     local mouseX, mouseY = love.mouse.getPosition()
