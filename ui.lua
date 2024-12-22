@@ -19,8 +19,8 @@ ui.CURRENT_FONT = nil
 ui.CURRENT_OFFSET = 1
 
 
-ui.TYPE_BG_SHADER = 0
-ui.TYPE_BUTTON = 1
+ui.TYPE_BUTTON = 0
+ui.TYPE_TEXT = 1
 
 ui.heldButton = nil
 
@@ -38,6 +38,13 @@ ui.ButtonThemes = {
         fgHoverColor = { 0.7, 0.15, 0.15 },
         bgHoverColor = { 0.5, 0.10, 0.10 },
         textColor = { 1, 1, 1 },
+    },
+    positive = {
+        fgColor = { 0.1, 0.6, 0.15 },
+        bgColor = { 0.05, 0.4, 0.075 },
+        fgHoverColor = { 0.15, 0.7, 0.225 },
+        bgHoverColor = { 0.10, 0.5, 0.15 },
+        textColor = { 1, 1, 1 },
     }
 }
 
@@ -46,7 +53,7 @@ ui.drawn = {}
 function ui.updateSize(w, h)
     ui.windowSize = { w, h }
 
-    local modifier = math.min(w, h)
+    local modifier = math.min(w, h * 1.3)
 
     ui.CURRENT_FONT = love.graphics.newFont(modifier / 40.0)
     love.graphics.setFont(ui.CURRENT_FONT)
