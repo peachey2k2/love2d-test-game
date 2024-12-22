@@ -52,6 +52,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
         avgColor + 0.15,
         col
     );
+
     return vec4(col, 1.0);
 }
 ]]
