@@ -1,20 +1,22 @@
 local utils = require("utils")
-local ui = require("ui")
-local shaders = require("shaders")
-local scenes = require("scenes")
-
-
-local generalShader = love.graphics.newShader(shaders.general)
+local ui = require("graphics/ui")
+local shaders = require("graphics/shaders")
+local scenes = require("graphics/scenes")
 
 
 function love.load()
-    DEFAULT_FONT = love.graphics.newFont(16)
-    love.graphics.setFont(DEFAULT_FONT)
+    -- DEFAULT_FONT = love.graphics.newFont("Miracode.ttf")
+    -- love.graphics.setFont(DEFAULT_FONT)
+    -- ui.CUR_FONT.normal = DEFAULT_FONT
 
     ui.init()
 
     ui.switchScene(scenes.mainMenu)
-    generalShader:send("avgColor", { 0.8, 0.15, 0.15 });
+    shaders.general:send("avgColor", { 0.8, 0.15, 0.15 });
+end
+
+function love.errorhandler(msg)
+    print((debug.traceback("Error: " .. tostring(msg), 1 + (layer or 1)):gsub("\n[^\n]+$", "")))
 end
 
 function love.resize(w, h)
@@ -24,15 +26,18 @@ end
 function love.draw()
     local time = love.timer.getTime()
 
-    love.graphics.setShader(generalShader)
+    love.graphics.setShader(shaders.general)
 
-    generalShader:send("time", time)
-    generalShader:send("resolution", { love.graphics.getWidth(), love.graphics.getHeight() })
+    shaders.general:send("time", time)
+    shaders.general:send("resolution", { love.graphics.getWidth(), love.graphics.getHeight() })
 
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setShader()
 
     ui.draw()
+
+    local fps = love.timer.getFPS()
+    love.graphics.print(fps, 10, 10)
 end
 
 local key_calls = {
