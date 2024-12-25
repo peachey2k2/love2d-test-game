@@ -1,6 +1,6 @@
 local shaders = {}
 
-shaders.general = [[
+shaders.general = love.graphics.newShader [[
 extern float time;
 extern vec2 resolution;
 extern vec3 avgColor;

@@ -1,2 +1,5 @@
 # helper script to add all and commit
 commit.sh
+
+# lsp config
+.luarc.json
