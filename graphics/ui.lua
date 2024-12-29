@@ -1,5 +1,6 @@
 local utils = require("utils")
 local shaders = require("graphics/shaders")
+local tastytext = require("lib/tastytext")
 
 local ui = {}
 
@@ -28,6 +29,10 @@ ui.TYPE_BUTTON = 0
 ui.TYPE_TEXT = 1
 
 ui.heldButton = nil
+
+local TOOLTIP_WRAP_RATIO = 0.25
+local SUBTOOLTIP_WRAP_RATIO = 0.15
+local TOOLTIP_PAD = 5
 
 ui.ButtonThemes = {
     normal = {
@@ -106,7 +111,7 @@ function ui.draw()
         end
     end
     if ui.tooltip then
-        ui.drawTooltip(ui.tooltip)
+        ui.drawTooltip(ui.tooltip, TOOLTIP_WRAP_RATIO, love.mouse.getPosition())
         ui.tooltip = nil
     end
 end
@@ -155,33 +160,52 @@ function ui.drawText(text)
     love.graphics.draw(textObj, text.xx - sizeX / 2, text.yy - sizeY / 2)
 end
 
-local WRAP_RATIO = 0.3
-local TOOLTIP_PAD = 5
-function ui.drawTooltip(tooltip)
-    local wText, wrappedText = ui.CUR_FONT.small:getWrap(tooltip.text, ui.windowSize[1] * WRAP_RATIO)
-    local hText = #wrappedText * ui.CUR_FONT.small:getHeight()
+local strTags = {
+    col = { 1, 0, 0, 1 },
+    def = { 1, 1, 1, 1 },
+}
+
+function ui.drawTooltip(tooltip, wrapRatio, xPos, yPos)
+    local wrap = ui.windowSize[1] * wrapRatio
+    local textFormatted = utils.strFormat(tooltip.text, tooltip.interpolate)
+    local textObj = tastytext.new(textFormatted, wrap, ui.CUR_FONT.small, strTags)
+
+    -- local wText, wrappedText = ui.CUR_FONT.small:getWrap(textFormatted, wrap)
+    -- local hText = #wrappedText * ui.CUR_FONT.small:getHeight()
+    local wText = textObj.limit
+    local hText = textObj.lines * textObj.line_height
 
     local wTitle, hTitle = ui.CUR_FONT.normal:getWidth(tooltip.title), ui.CUR_FONT.normal:getHeight()
     local wIn, hIn = wText + TOOLTIP_PAD * 2, hText + TOOLTIP_PAD * 2
     local wOut, hOut = math.max(wIn, wTitle) + TOOLTIP_PAD * 2, hIn + hTitle + TOOLTIP_PAD * 3
     local wFrame, hFrame = wOut + TOOLTIP_PAD * 2, hOut + TOOLTIP_PAD * 2
-    local xMouse, yMouse = love.mouse.getPosition()
 
     love.graphics.setColor(0.1, 0.1, 0.1)
-    love.graphics.rectangle("fill", xMouse, yMouse, wFrame, hFrame, 8, 8, 9)
+    love.graphics.rectangle("fill", xPos, yPos, wFrame, hFrame, 8, 8, 9)
     love.graphics.setColor(0.9, 0.9, 0.9)
-    love.graphics.rectangle("fill", xMouse + TOOLTIP_PAD, yMouse + TOOLTIP_PAD, wOut, hOut, 8, 8, 9)
+    love.graphics.rectangle("fill", xPos + TOOLTIP_PAD, yPos + TOOLTIP_PAD, wOut, hOut, 8, 8, 9)
     love.graphics.setColor(0.1, 0.1, 0.1)
-    love.graphics.rectangle("fill", xMouse + 2 * TOOLTIP_PAD, yMouse + hTitle + 3 * TOOLTIP_PAD, wIn, hIn, 8, 8, 9)
+    love.graphics.rectangle("fill", xPos + 2 * TOOLTIP_PAD, yPos + hTitle + 3 * TOOLTIP_PAD, wIn, hIn, 8, 8, 9)
 
     love.graphics.setColor(0, 0, 0)
-    love.graphics.print(tooltip.title, xMouse + (wOut - wTitle) / 2 + TOOLTIP_PAD, yMouse + 2 * TOOLTIP_PAD)
+    love.graphics.print(tooltip.title, xPos + (wOut - wTitle) / 2 + TOOLTIP_PAD, yPos + 2 * TOOLTIP_PAD)
+
     love.graphics.setColor(1, 1, 1)
-    for i, line in ipairs(wrappedText) do
-        love.graphics.print(line, ui.CUR_FONT.small,
-            xMouse + 3 * TOOLTIP_PAD,
-            yMouse + hTitle + 4 * TOOLTIP_PAD + (i - 1) * ui.CUR_FONT.small:getHeight()
-        )
+    -- for i, line in ipairs(wrappedText) do
+    --     love.graphics.print(line, ui.CUR_FONT.small,
+    --         xPos + 3 * TOOLTIP_PAD,
+    --         yPos + hTitle + 4 * TOOLTIP_PAD + (i - 1) * ui.CUR_FONT.small:getHeight()
+    --     )
+    -- end
+    love.graphics.translate(xPos + 3 * TOOLTIP_PAD, yPos + hTitle + 4 * TOOLTIP_PAD)
+    textObj:draw()
+    love.graphics.origin()
+    if tooltip.interpolate then
+        for i, interp in ipairs(tooltip.interpolate) do
+            if interp.tooltip then
+                ui.drawTooltip(interp.tooltip, SUBTOOLTIP_WRAP_RATIO, xPos + wFrame + 2, yPos + (i - 1) * 76)
+            end
+        end
     end
 end
 

@@ -37,6 +37,7 @@ function love.draw()
     ui.draw()
 
     local fps = love.timer.getFPS()
+    love.graphics.setColor(1, 1, 1)
     love.graphics.print(fps, 10, 10)
 end
 

@@ -1,6 +1,8 @@
 local shaders = {}
 
 shaders.general = love.graphics.newShader [[
+#pragma language glsl3
+
 extern float time;
 extern vec2 resolution;
 extern vec3 avgColor;
@@ -37,7 +39,7 @@ vec3 lerp(vec3 a, vec3 b, vec3 t) {
     return a + (b - a) * t;
 }
 
-vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     vec2 uv = screen_coords.xy / resolution.xy;
 
     float mult = time * 0.4;
@@ -56,5 +58,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     return vec4(col, 1.0);
 }
 ]]
+
+
 
 return shaders

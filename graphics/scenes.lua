@@ -71,9 +71,9 @@ scenes.classSelect = { {
     tooltip = {
         title = "Warrior",
         text =
-        "A strong and sturdy class, the warrior is capable of taking a lot of damage and dealing a lot of damage. Starts with a {} and a {}. Testing custom interpolation -> {} <- here!!",
-        attribs = { items.Sword, items.Shield, "chess battle advanced" },
-        footnote = nil,
+        "Astrong and sturdy class, the warrior is capable of taking a lot of damage and dealing a lot of damage. Starts with a %s and a %s.",
+        attribs = nil,
+        interpolate = { items.Sword, items.Shield }
     },
 }, {
     type = ui.TYPE_BUTTON,
