@@ -11,6 +11,12 @@ items.Sword = {
     type = items.Types.WEAPON,
     damage = 5,
     value = 10,
+    tooltip = {
+        title = "Sword",
+        text = "A simple sword.",
+        attribs = nil,
+        interpolate = nil,
+    },
 }
 
 items.Shield = {
@@ -18,6 +24,12 @@ items.Shield = {
     type = items.Types.ARMOR,
     defense = 5,
     value = 10,
+    tooltip = {
+        title = "Shield",
+        text = "A simple shield.",
+        attribs = nil,
+        interpolate = nil,
+    },
 }
 
 return items
